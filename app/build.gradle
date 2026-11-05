@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'id.sekolah.penilaitugas'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'id.sekolah.penilaitugas'
+        minSdk 24
+        targetSdk 34
+        versionCode((System.getenv('GITHUB_RUN_NUMBER') ?: '1') as Integer)
+        versionName "1.0." + (System.getenv('GITHUB_RUN_NUMBER') ?: '0')
+    }
+
+    // Kunci tetap supaya APK versi baru bisa dipasang menimpa versi lama.
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug { signingConfig signingConfigs.debug }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.11.0'
+    implementation 'androidx.core:core:1.13.1'
+}

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Penilai Tugas</title>
+<style>
+/* Tata letak: satu kolom seperti buku nilai, tab di bawah untuk dipegang satu tangan. */
+:root{
+  --kertas:#F3F5F9; --lembar:#FFFFFF; --tinta:#1F2A44; --tinta-2:#55607A;
+  --garis:#DCE3EE; --biru-garis:#9DB4D6; --pena:#D2353F; --pena-lembut:#FBE9EA;
+  --benar:#1E7A4F; --benar-lembut:#E3F3EA; --sedang:#A86A00; --sedang-lembut:#FCF1DC;
+  --font: system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+  --mono: ui-monospace,"Roboto Mono",Menlo,monospace;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --kertas:#12172A; --lembar:#1B2238; --tinta:#E8ECF6; --tinta-2:#A4AEC6;
+    --garis:#2C3550; --biru-garis:#4F6690; --pena:#FF6B73; --pena-lembut:#3A1E26;
+    --benar:#5BD19A; --benar-lembut:#16352A; --sedang:#F2B851; --sedang-lembut:#3A2E14;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--kertas);color:var(--tinta);font:15px/1.5 var(--font);-webkit-tap-highlight-color:transparent}
+header{background:#1F2A44;color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:5}
+
+header h1{margin:0;font-size:18px;letter-spacing:.2px}
+header p{margin:2px 0 0;font-size:12.5px;color:#B9C4DC}
+main{padding:16px 16px 96px;max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+[hidden]{display:none!important}
+.kartu{background:var(--lembar);border:1px solid var(--garis);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
+h2{margin:0;font-size:16px}
+h3{margin:0;font-size:14px}
+.kecil{font-size:13px;color:var(--tinta-2)}
+label{font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:6px}
+input,select,textarea{font:inherit;color:var(--tinta);background:var(--kertas);border:1px solid var(--garis);border-radius:10px;padding:10px 12px;width:100%}
+textarea{min-height:150px;font-family:var(--mono);font-size:13.5px;line-height:1.55;
+  background-image:repeating-linear-gradient(transparent 0 20.4px,var(--garis) 20.4px 21px);background-attachment:local}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--biru-garis);outline-offset:1px}
+.baris{display:flex;gap:10px;flex-wrap:wrap}
+.baris>*{flex:1 1 140px;min-width:0}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:12px 14px;cursor:pointer;background:var(--garis);color:var(--tinta)}
+button.utama{background:var(--pena);color:#fff}
+button.utama:disabled{opacity:.55}
+button.garis{background:transparent;border:1px solid var(--garis)}
+button.teks{background:none;padding:6px 8px;color:var(--pena)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--lembar);border-top:1px solid var(--garis);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav button{flex:1;background:none;border-radius:0;padding:10px 4px 12px;font-size:12px;color:var(--tinta-2);display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button svg{width:22px;height:22px}
+nav button[aria-current="page"]{color:var(--pena)}
+.foto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.foto{position:relative;aspect-ratio:3/4;border-radius:8px;overflow:hidden;border:1px solid var(--garis);background:var(--kertas)}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.foto button{position:absolute;top:4px;right:4px;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.6);color:#fff;font-size:13px}
+.kosong{border:1.5px dashed var(--biru-garis);border-radius:var(--r);padding:20px;text-align:center;color:var(--tinta-2);display:flex;flex-direction:column;gap:10px;align-items:center}
+.nilai-besar{display:flex;align-items:center;gap:14px}
+.lingkar{width:76px;height:76px;border-radius:50%;border:3px solid var(--pena);color:var(--pena);display:grid;place-items:center;font-size:28px;font-weight:800;transform:rotate(-6deg);flex:none;font-variant-numeric:tabular-nums}
+.soal{border-top:1px solid var(--garis);padding-top:10px;display:grid;grid-template-columns:34px 1fr auto;gap:4px 10px;align-items:start}
+.soal .no{font-weight:700;font-variant-numeric:tabular-nums}
+.soal .isi{min-width:0;overflow-wrap:anywhere}
+.soal .skor{display:flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
+.soal .skor input{width:58px;padding:6px 8px;text-align:right}
+.chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:var(--kertas);color:var(--tinta-2);margin-right:6px}
+.st-benar{background:var(--benar-lembut);color:var(--benar)}
+.st-sebagian{background:var(--sedang-lembut);color:var(--sedang)}
+.st-salah{background:var(--pena-lembut);color:var(--pena)}
+.daftar{display:flex;flex-direction:column;gap:0}
+.item{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--garis)}
+.item:first-child{border-top:0}
+.item .tengah{flex:1;min-width:0}
+.item .judul{font-weight:600;overflow-wrap:anywhere}
+.tabel-wrap{overflow-x:auto;margin:0 -4px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--garis);white-space:nowrap}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--tinta-2)}
+td.angka,th.angka{text-align:right}
+.ringkas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ringkas div{background:var(--kertas);border-radius:10px;padding:10px}
+.ringkas b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.ringkas span{font-size:12px;color:var(--tinta-2)}
+.pesan{border-radius:10px;padding:10px 12px;font-size:13.5px}
+.pesan.err{background:var(--pena-lembut);color:var(--pena)}
+.pesan.ok{background:var(--benar-lembut);color:var(--benar)}
+.memuat{display:flex;gap:10px;align-items:center;color:var(--tinta-2)}
+.putar{width:18px;height:18px;border:2.5px solid var(--garis);border-top-color:var(--pena);border-radius:50%;animation:p 0.8s linear infinite}
+@keyframes p{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.putar{animation-duration:3s}}
+#toast{position:fixed;left:16px;right:16px;bottom:84px;margin:0 auto;max-width:480px;background:var(--tinta);color:var(--lembar);padding:12px 14px;border-radius:10px;font-size:14px;z-index:9;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}
+#toast.on{opacity:1;transform:none}
+details summary{cursor:pointer;font-weight:600;font-size:13.5px}
+ol.langkah{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+a{color:var(--pena)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Penilai Tugas</h1>
+  <p id="sub">Foto lembar jawaban, nilai keluar otomatis</p>
+</header>
+
+<main>
+  <!-- ============ NILAI ============ -->
+  <section id="v-nilai">
+    <div class="kartu" id="perlu-setelan" hidden>
+      <h2>Isi API key dulu</h2>
+      <p class="kecil">Aplikasi ini memakai Gemini dari Google AI Studio untuk membaca dan menilai jawaban. Masukkan API key di tab Setelan.</p>
+      <button class="utama" data-buka="setelan">Buka Setelan</button>
+    </div>
+
+    <div class="kartu">
+      <h2>Nilai lembar jawaban</h2>
+      <label>Tugas
+        <select id="n-tugas"></select>
+      </label>
+      <div class="baris">
+        <label>Nama siswa
+          <input id="n-nama" placeholder="Kosongkan agar dibaca dari foto" autocomplete="off">
+        </label>
+        <label>Kelas
+          <input id="n-kelas" placeholder="mis. 8A" autocomplete="off">
+        </label>
+      </div>
+
+      <input type="file" id="n-file" accept="image/*" multiple hidden>
+      <div id="n-foto-wrap"></div>
+
+      <button class="utama" id="n-nilai" disabled>Nilai sekarang</button>
+      <div id="n-status"></div>
+    </div>
+
+    <div class="kartu" id="n-hasil" hidden></div>
+  </section>
+
+  <!-- ============ TUGAS ============ -->
+  <section id="v-tugas" hidden>
+    <div class="kartu">
+      <h2 id="t-judul-form">Tugas baru</h2>
+      <div class="baris">
+        <label>Nama tugas
+          <input id="t-judul" placeholder="mis. Ulangan Harian Bab 3">
+        </label>
+        <label>Mapel
+          <input id="t-mapel" placeholder="mis. IPA">
+        </label>
+      </div>
+      <label>Kelas
+        <input id="t-kelas" placeholder="mis. 8A, 8B">
+      </label>
+      <label>Kunci jawaban dan cara menilai
+        <textarea id="t-kunci" placeholder="1. B&#10;2. D&#10;3. (isian) fotosintesis&#10;4. (esai, 10 poin) Sebutkan 3 manfaat hutan. Skor penuh jika 3 manfaat benar.&#10;5. (pendapat, 10 poin) Setujukah kamu ...? Nilai dari alasan yang logis."></textarea>
+      </label>
+      <p class="kecil">Tulis jenis soal dalam kurung: <b>(isian)</b>, <b>(esai)</b>, <b>(pendapat)</b>. Soal tanpa keterangan dianggap pilihan ganda. Bobot bawaan: pilihan ganda dan isian 1 poin, esai dan pendapat 5 poin. Tulis "(esai, 10 poin)" untuk mengubahnya.</p>
+      <div class="baris">
+        <button class="garis" id="t-contoh">Isi contoh</button>
+        <button class="garis" id="t-foto-kunci">Baca kunci dari foto</button>
+      </div>
+      <input type="file" id="t-file" accept="image/*" multiple hidden>
+      <div id="t-status"></div>
+      <div class="baris">
+        <button class="garis" id="t-batal" hidden>Batal</button>
+        <button class="utama" id="t-simpan">Simpan tugas</button>
+      </div>
+    </div>
+
+    <div class="kartu">
+      <h2>Daftar tugas</h2>
+      <div class="daftar" id="t-daftar"></div>
+    </div>
+  </section>
+
+  <!-- ============ REKAP ============ -->
+  <section id="v-rekap" hidden>
+    <div class="kartu">
+      <h2>Rekap nilai</h2>
+      <div class="baris">
+        <label>Kelas
+          <select id="r-kelas"></select>
+        </label>
+        <label>Tugas
+          <select id="r-tugas"></select>
+        </label>
+      </div>
+      <div class="ringkas" id="r-ringkas"></div>
+      <div class="tabel-wrap"><table id="r-tabel"></table></div>
+      <button class="utama" id="r-excel">Unduh Excel</button>
+    </div>
+  </section>
+
+  <!-- ============ SETELAN ============ -->
+  <section id="v-setelan" hidden>
+    <div class="kartu">
+      <h2>Gemini (Google AI Studio)</h2>
+      <label>API key
+        <input id="s-key" type="password" placeholder="AIza..." autocomplete="off" spellcheck="false">
+      </label>
+      <label>Model
+        <select id="s-model"></select>
+      </label>
+      <div class="baris">
+        <button class="garis" id="s-tampil">Tampilkan key</button>
+        <button class="utama" id="s-cek">Simpan &amp; cek</button>
+      </div>
+      <div id="s-status"></div>
+      <details>
+        <summary>Cara mendapatkan API key (gratis)</summary>
+        <ol class="langkah">
+          <li>Buka <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> dan masuk dengan akun Google.</li>
+          <li>Ketuk <b>Create API key</b>.</li>
+          <li>Salin key yang muncul (diawali <code>AIza</code>), lalu tempel di kolom di atas.</li>
+          <li>Ketuk <b>Simpan &amp; cek</b>.</li>
+        </ol>
+        <p class="kecil">API key hanya tersimpan di HP ini. Jangan bagikan ke orang lain.</p>
+      </details>
+    </div>
+    <div class="kartu">
+      <h2>Data</h2>
+      <p class="kecil" id="s-info"></p>
+      <p class="kecil">Data tugas dan nilai tersimpan di HP ini. Foto lembar jawaban tidak disimpan; foto hanya dikirim ke Gemini untuk dinilai. Unduh Excel secara rutin sebagai cadangan.</p>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button data-tab="nilai" aria-current="page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Nilai</button>
+  <button data-tab="tugas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></svg>Tugas</button>
+  <button data-tab="rekap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Rekap</button>
+  <button data-tab="setelan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>Setelan</button>
+</nav>
+<div id="toast" role="status"></div>
+
+<script src="xlsx.full.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
