@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.PrintManager;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.webkit.JavascriptInterface;
@@ -36,6 +38,7 @@ public class MainActivity extends Activity {
     private WebView web;
     private ValueCallback<Uri[]> fileCallback;
     private Uri cameraUri;
+    private WebView printView; // disimpan supaya tidak dibuang sebelum dicetak
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,29 @@ public class MainActivity extends Activity {
     }
 
     private Intent buildChooser(WebChromeClient.FileChooserParams params) {
+        // File selain gambar (mis. Excel daftar siswa): buka pemilih file biasa.
+        String[] accept = params.getAcceptTypes();
+        boolean gambar = accept == null || accept.length == 0;
+        java.util.ArrayList<String> mimes = new java.util.ArrayList<>();
+        if (accept != null) for (String a : accept) {
+            if (a == null || a.trim().isEmpty()) { gambar = true; continue; }
+            for (String t : a.split(",")) {
+                t = t.trim().toLowerCase();
+                if (t.startsWith("image")) gambar = true;
+                else if (t.equals(".xlsx")) mimes.add("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                else if (t.equals(".xls")) mimes.add("application/vnd.ms-excel");
+                else if (t.equals(".csv")) { mimes.add("text/csv"); mimes.add("text/comma-separated-values"); mimes.add("text/plain"); }
+                else if (t.contains("/")) mimes.add(t);
+            }
+        }
+        if (!gambar) {
+            Intent doc = new Intent(Intent.ACTION_GET_CONTENT);
+            doc.addCategory(Intent.CATEGORY_OPENABLE);
+            doc.setType("*/*");
+            if (!mimes.isEmpty()) doc.putExtra(Intent.EXTRA_MIME_TYPES, mimes.toArray(new String[0]));
+            cameraUri = null;
+            return Intent.createChooser(doc, "Pilih file");
+        }
         Intent camera = null;
         try {
             File dir = new File(getCacheDir(), "foto");
@@ -174,6 +200,25 @@ public class MainActivity extends Activity {
 
     /** Dipanggil dari JavaScript sebagai window.AndroidApp. */
     private class Bridge {
+        @JavascriptInterface
+        public void printHtml(final String html, final String title) {
+            runOnUiThread(() -> {
+                final String job = (title == null || title.trim().isEmpty()) ? "Hasil koreksi" : title;
+                WebView pv = new WebView(MainActivity.this);
+                pv.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        PrintManager pm = (PrintManager) getSystemService(PRINT_SERVICE);
+                        if (pm == null) { toast("Fitur cetak tidak tersedia di HP ini"); return; }
+                        pm.print(job, view.createPrintDocumentAdapter(job),
+                                new PrintAttributes.Builder().setMediaSize(PrintAttributes.MediaSize.ISO_A4).build());
+                    }
+                });
+                printView = pv;
+                pv.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
+            });
+        }
+
         @JavascriptInterface
         public String saveFile(String filename, String base64, String mime) {
             try {

@@ -93,6 +93,75 @@ td.angka,th.angka{text-align:right}
 details summary{cursor:pointer;font-weight:600;font-size:13.5px}
 ol.langkah{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14px}
 a{color:var(--pena)}
+.dua{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dua button{min-height:56px;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px}
+.dua svg{width:22px;height:22px;flex:none}
+.chip{flex:none;white-space:nowrap}
+.soal .isi input{min-width:0;flex:1}
+.chip.st-cek{background:var(--sedang-lembut);color:var(--sedang)}
+.periksa{outline:2px solid var(--sedang);outline-offset:4px;border-radius:6px}
+.siswa-list{display:flex;flex-direction:column}
+.siswa-list .item{padding:8px 0}
+.lencana{font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--benar-lembut);color:var(--benar);white-space:nowrap}
+.lencana.belum{background:var(--kertas);color:var(--tinta-2)}
+dialog#edit{border:none;border-radius:16px;padding:0;width:min(640px,calc(100% - 16px));max-height:92vh;overflow:auto;background:var(--kertas);color:var(--tinta)}
+dialog#edit::backdrop{background:rgba(0,0,0,.5)}
+dialog#edit .isi-dlg{padding:14px;display:flex;flex-direction:column;gap:12px}
+.dlg-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dlg-head button{min-width:44px;min-height:44px}
+tr.klik{cursor:pointer}tr.klik:hover td{background:var(--kertas)}
+.belum-dinilai{font-size:13.5px;color:var(--tinta-2)}
+
+/* ================= Tampilan modern ================= */
+:root{--kertas:#f4f5fb;--lembar:#ffffff;--tinta:#171a2c;--tinta-2:#5b6178;--garis:#e4e6f0;--biru-garis:#a5acf5;
+  --pena:#5146e5;--pena-2:#7c3aed;--pena-lembut:#ecebfe;--salah:#d93f3c;--salah-lembut:#fde8e7;
+  --benar:#12805c;--benar-lembut:#e1f5ec;--sedang:#a35f00;--sedang-lembut:#fdf0dc;
+  --bayang:0 1px 2px rgba(23,26,60,.04),0 8px 24px rgba(23,26,60,.07);--r:20px}
+@media (prefers-color-scheme: dark){:root{--kertas:#0e1020;--lembar:#181b2e;--tinta:#eceefa;--tinta-2:#a2a7c2;--garis:#2a2e48;--biru-garis:#6c66d9;
+  --pena:#8b83ff;--pena-2:#b28cff;--pena-lembut:#262451;--salah:#ff7b76;--salah-lembut:#3b1d24;
+  --benar:#4fd1a1;--benar-lembut:#123227;--sedang:#f3b74f;--sedang-lembut:#3a2c12;--bayang:none;color-scheme:dark}}
+body{font-size:15.5px;background:var(--kertas)}
+header{position:relative;background:linear-gradient(135deg,var(--pena) 0%,var(--pena-2) 100%);padding:calc(18px + env(safe-area-inset-top,0px)) 20px 26px;border-radius:0 0 28px 28px;box-shadow:0 10px 30px rgba(81,70,229,.25)}
+@media (prefers-color-scheme: dark){header{background:linear-gradient(135deg,#3b33b8,#5b2bb5);box-shadow:none}}
+header h1{font-size:22px;font-weight:800;letter-spacing:-.01em}
+header p{color:rgba(255,255,255,.82);font-size:13.5px;margin-top:4px}
+main{padding:16px 16px 120px;gap:16px}
+.kartu{border:none;border-radius:var(--r);box-shadow:var(--bayang);padding:18px;gap:14px}
+@media (prefers-color-scheme: dark){.kartu{border:1px solid var(--garis)}}
+h2{font-size:17px;font-weight:800;letter-spacing:-.01em}
+label{font-weight:700;color:var(--tinta-2);font-size:12.5px;letter-spacing:.01em}
+input,select,textarea{background:var(--kertas);border:1.5px solid transparent;border-radius:14px;padding:12px 14px;font-size:15.5px;color:var(--tinta);transition:border-color .15s,box-shadow .15s}
+textarea{background-image:none;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pena);box-shadow:0 0 0 4px var(--pena-lembut)}
+button{border-radius:14px;min-height:48px;padding:12px 16px;font-weight:700;transition:transform .1s,filter .15s}
+button:active{transform:scale(.98)}
+button:focus-visible{outline:3px solid var(--biru-garis);outline-offset:2px}
+button.utama{background:linear-gradient(135deg,var(--pena),var(--pena-2));color:#fff;box-shadow:0 6px 16px rgba(81,70,229,.28)}
+button.utama:disabled{opacity:.45;box-shadow:none}
+button.garis{background:var(--lembar);border:1.5px solid var(--garis);color:var(--tinta)}
+button.teks{min-height:40px;color:var(--pena);border-radius:10px}
+nav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));padding:6px;border:none;border-radius:24px;background:var(--lembar);box-shadow:0 10px 30px rgba(23,26,60,.16);gap:2px}
+@media (prefers-color-scheme: dark){nav{border:1px solid var(--garis);box-shadow:0 10px 30px rgba(0,0,0,.5)}}
+nav button{min-height:56px;padding:6px 2px;border-radius:18px;font-size:11.5px;font-weight:700;gap:2px}
+nav button[aria-current="page"]{background:var(--pena-lembut);color:var(--pena)}
+#toast{bottom:calc(92px + env(safe-area-inset-bottom,0px));border-radius:14px;padding:13px 16px;font-weight:600}
+.kosong{border:1.5px dashed var(--biru-garis);background:color-mix(in srgb,var(--pena-lembut) 45%,transparent);border-radius:18px;padding:22px}
+.foto{border-radius:14px;border:none;box-shadow:var(--bayang)}
+.lingkar{width:84px;height:84px;border:none;color:#fff;background:linear-gradient(135deg,var(--pena),var(--pena-2));transform:none;font-size:30px;box-shadow:0 8px 20px rgba(81,70,229,.3)}
+.chip{border-radius:8px;font-size:10.5px;padding:3px 7px}
+.st-salah{background:var(--salah-lembut);color:var(--salah)}
+.pesan{border-radius:14px;padding:12px 14px}
+.pesan.err{background:var(--salah-lembut);color:var(--salah)}
+.pesan:not(.err):not(.ok){background:var(--pena-lembut);color:var(--pena)}
+.putar{border-top-color:var(--pena)}
+.ringkas div{border-radius:16px;padding:12px}
+.ringkas b{font-size:22px;font-weight:800}
+.item{padding:12px 0}
+.soal{border-top:1px solid var(--garis);padding-top:12px}
+th{letter-spacing:.06em}
+td,th{padding:10px 8px}
+dialog#edit{border-radius:24px;background:var(--kertas)}
+details{background:var(--kertas);border-radius:14px;padding:12px 14px}
 </style>
 </head>
 <body>
@@ -116,6 +185,14 @@ a{color:var(--pena)}
         <select id="n-tugas"></select>
       </label>
       <div class="baris">
+        <label>Kelas
+          <select id="n-kelas-pilih"></select>
+        </label>
+        <label id="n-siswa-wrap">Siswa
+          <select id="n-siswa"></select>
+        </label>
+      </div>
+      <div class="baris" id="n-manual">
         <label>Nama siswa
           <input id="n-nama" placeholder="Kosongkan agar dibaca dari foto" autocomplete="off">
         </label>
@@ -124,6 +201,7 @@ a{color:var(--pena)}
         </label>
       </div>
 
+      <input type="file" id="n-kamera" accept="image/*" capture="environment" hidden>
       <input type="file" id="n-file" accept="image/*" multiple hidden>
       <div id="n-foto-wrap"></div>
 
@@ -171,6 +249,25 @@ a{color:var(--pena)}
     </div>
   </section>
 
+  <!-- ============ KELAS ============ -->
+  <section id="v-kelas" hidden>
+    <div class="kartu">
+      <h2>Kelas baru</h2>
+      <div class="baris">
+        <label>Nama kelas
+          <input id="k-nama" placeholder="mis. 8A" autocomplete="off">
+        </label>
+      </div>
+      <button class="utama" id="k-tambah">Tambah kelas</button>
+    </div>
+    <div class="kartu">
+      <h2>Daftar kelas</h2>
+      <div class="daftar" id="k-daftar"></div>
+    </div>
+    <div class="kartu" id="k-detail" hidden></div>
+    <input type="file" id="k-file" accept=".xlsx,.xls,.csv" hidden>
+  </section>
+
   <!-- ============ REKAP ============ -->
   <section id="v-rekap" hidden>
     <div class="kartu">
@@ -185,7 +282,12 @@ a{color:var(--pena)}
       </div>
       <div class="ringkas" id="r-ringkas"></div>
       <div class="tabel-wrap"><table id="r-tabel"></table></div>
-      <button class="utama" id="r-excel">Unduh Excel</button>
+      <div class="belum-dinilai" id="r-belum"></div>
+      <p class="kecil">Ketuk nama siswa untuk mengubah nilai atau mencetak hasil koreksinya.</p>
+      <div class="dua">
+        <button class="garis" id="r-cetak">Cetak hasil koreksi</button>
+        <button class="utama" id="r-excel">Unduh Excel</button>
+      </div>
     </div>
   </section>
 
@@ -216,6 +318,15 @@ a{color:var(--pena)}
       </details>
     </div>
     <div class="kartu">
+      <h2>Kop hasil koreksi</h2>
+      <label>Nama sekolah
+        <input id="s-sekolah" placeholder="mis. SMPN 6 Keritang" autocomplete="off">
+      </label>
+      <label>Nama guru
+        <input id="s-guru" placeholder="Muncul di bagian tanda tangan" autocomplete="off">
+      </label>
+    </div>
+    <div class="kartu">
       <h2>Data</h2>
       <p class="kecil" id="s-info"></p>
       <p class="kecil">Data tugas dan nilai tersimpan di HP ini. Foto lembar jawaban tidak disimpan; foto hanya dikirim ke Gemini untuk dinilai. Unduh Excel secara rutin sebagai cadangan.</p>
@@ -228,12 +339,15 @@ a{color:var(--pena)}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Nilai</button>
   <button data-tab="tugas">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></svg>Tugas</button>
+  <button data-tab="kelas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>Kelas</button>
   <button data-tab="rekap">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Rekap</button>
   <button data-tab="setelan">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>Setelan</button>
 </nav>
 <div id="toast" role="status"></div>
+<dialog id="edit"><div class="isi-dlg" id="edit-isi"></div></dialog>
 
 <script src="xlsx.full.min.js"></script>
 <script src="app.js"></script>
